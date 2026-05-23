@@ -1,0 +1,147 @@
+import type { Request, Response } from "express";
+import { issuesService } from "./issues.service";
+import { sendResponse } from "../../utils/sendResponse";
+import type { IIssueResponse } from "./issue.interface";
+
+const createIssue = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return sendResponse(res, 401, {
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const issue = await issuesService.createIssue(req.body, userId);
+
+    return sendResponse<IIssueResponse>(res, 201, {
+      success: true,
+      message: "Issue created successfully",
+      data: issue,
+    });
+  } catch (error: any) {
+    return sendResponse(res, 400, {
+      success: false,
+      message: "Failed to create issue",
+      errors: error.message,
+    });
+  }
+};
+
+const getAllIssues = async (req: Request, res: Response) => {
+  try {
+    const issues = await issuesService.getAllIssues(req.query as any);
+
+    return sendResponse<IIssueResponse[]>(res, 200, {
+      success: true,
+      message: "Issues retrieved",
+      data: issues,
+    });
+  } catch (error: any) {
+    return sendResponse(res, 500, {
+      success: false,
+      message: "Failed to fetch issues",
+      errors: error.message,
+    });
+  }
+};
+
+const getSingleIssue = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+
+    if (!id) {
+      return sendResponse(res, 400, {
+        success: false,
+        message: "Issue id is required",
+      });
+    }
+
+    const issue = await issuesService.getSingleIssue(id);
+
+    return sendResponse<IIssueResponse>(res, 200, {
+      success: true,
+      message: "Issue retrieved",
+      data: issue,
+    });
+  } catch (error: any) {
+    return sendResponse(res, 404, {
+      success: false,
+      message: "Issue not found",
+      errors: error.message,
+    });
+  }
+};
+
+const updateIssue = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+
+    if (!id) {
+      return sendResponse(res, 400, {
+        success: false,
+        message: "Issue id is required",
+      });
+    }
+
+    const issue = await issuesService.updateIssue(
+      id,
+      req.body,
+      req.user
+    );
+
+    return sendResponse<IIssueResponse>(res, 200, {
+      success: true,
+      message: "Issue updated successfully",
+      data: issue,
+    });
+  } catch (error: any) {
+    const code = error.message.includes("Forbidden")
+      ? 403
+      : error.message.includes("Conflict")
+      ? 409
+      : 400;
+
+    return sendResponse(res, code, {
+      success: false,
+      message: "Update failed",
+      errors: error.message,
+    });
+  }
+};
+
+const deleteIssue = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id as string;
+
+    if (!id) {
+      return sendResponse(res, 400, {
+        success: false,
+        message: "Issue id is required",
+      });
+    }
+
+    await issuesService.deleteIssue(id);
+
+    return sendResponse(res, 200, {
+      success: true,
+      message: "Issue deleted successfully",
+    });
+  } catch (error: any) {
+    return sendResponse(res, 404, {
+      success: false,
+      message: "Deletion failed",
+      errors: error.message,
+    });
+  }
+};
+
+export const issuesController = {
+  createIssue,
+  getAllIssues,
+  getSingleIssue,
+  updateIssue,
+  deleteIssue,
+};
