@@ -1,8 +1,7 @@
 import type { Request, Response } from "express";
 import { authService } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
-import type { ResponseData } from "../../types";
-import { error } from "node:console";
+
 
 const signup = async (req: Request, res: Response) => {
     try{

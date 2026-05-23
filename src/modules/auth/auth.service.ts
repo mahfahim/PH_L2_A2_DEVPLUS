@@ -1,11 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { pool } from "../../db";
-import { config } from "dotenv";
-import type { RegisterPayload, LoginPayload } from "../../types";
+import  config  from "../../config";
+import type { ILoginPayload, IRegisterPayload, IUserResponse } from "./auth.interface";
 
 
-const registerUser = async (paylaod: RegisterPayload) => {
+const registerUser = async (paylaod: IRegisterPayload): Promise<IUserResponse> => {
     const { name, email, password, role = "contributor"} = paylaod;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -18,10 +18,10 @@ const registerUser = async (paylaod: RegisterPayload) => {
 
     delete result.rows[0].password;
     
-    return result;
+    return result.rows[0];
 };
 
-const loginUser = async (paylaod: LoginPayload ) => {
+const loginUser = async (paylaod: ILoginPayload ) => {
     const { email, password} = paylaod;
 
     const userRes = await pool.query(`
@@ -38,9 +38,9 @@ const loginUser = async (paylaod: LoginPayload ) => {
         throw new Error("Invalid credentials");
     }
 
-    const token = jwt.sign(
+    const token: string = jwt.sign(
         {id: user.id, name: user.name, role: user.role},
-        process.env.jwt_secret as string,
+        config.jwt_secret as string,
         { expiresIn: "1d"}
     );
 
