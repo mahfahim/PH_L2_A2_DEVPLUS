@@ -1,12 +1,13 @@
 import type { Request, Response } from "express";
 import { issuesService } from "./issues.service";
 import { sendResponse } from "../../utils/sendResponse";
-import type { IIssueResponse } from "./issue.interface";
+import type { IIssueResponse, IPopulatedIssueResponse } from "./issue.interface";
 
 const createIssue = async (req: Request, res: Response) => {
   try {
+    console.log("hi heloo");
     const userId = req.user?.id;
-
+    console.log(`userId ${userId}`);
     if (!userId) {
       return sendResponse(res, 401, {
         success: false,
@@ -34,9 +35,8 @@ const getAllIssues = async (req: Request, res: Response) => {
   try {
     const issues = await issuesService.getAllIssues(req.query as any);
 
-    return sendResponse<IIssueResponse[]>(res, 200, {
+    return sendResponse<IPopulatedIssueResponse[]>(res, 200, {
       success: true,
-      message: "Issues retrieved",
       data: issues,
     });
   } catch (error: any) {
@@ -51,6 +51,7 @@ const getAllIssues = async (req: Request, res: Response) => {
 const getSingleIssue = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
+    console.log(id);
 
     if (!id) {
       return sendResponse(res, 400, {
@@ -61,9 +62,8 @@ const getSingleIssue = async (req: Request, res: Response) => {
 
     const issue = await issuesService.getSingleIssue(id);
 
-    return sendResponse<IIssueResponse>(res, 200, {
+    return sendResponse<IPopulatedIssueResponse[]>(res, 200, {
       success: true,
-      message: "Issue retrieved",
       data: issue,
     });
   } catch (error: any) {

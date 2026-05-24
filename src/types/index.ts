@@ -1,21 +1,9 @@
-export type UserRole = "contributor" | "maintainer";
+// src/types/index.ts
 
+import type { JwtPayload } from "jsonwebtoken";
 
-export interface RegisterPayload {
-    name: string;
-    email: string;
-    password: string;
-    role?: UserRole;
-}
-
-export interface LoginPayload {
-    email: string;
-    password: string;
-}
-
-export interface ResponseData<T = any> {
-  success: boolean;
-  message: string;
-  data?: T;
-  errors?: any;
+export interface CustomJwtPayload extends JwtPayload {
+  role?: string;
+  id?: number;
+  name?: string;
 }

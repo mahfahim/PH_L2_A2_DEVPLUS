@@ -2,7 +2,7 @@ import { pool } from "../../db";
 import type { IIssuePayload, IIssueQuery, IIssueResponse } from "./issue.interface";
 
 
-const createIssue = async (payload: IIssuePayload, reporterId: number): Promise<IIssueResponse> {
+const createIssue = async (payload: IIssuePayload, reporterId: number): Promise<IIssueResponse> => {
     const { title, description, type } = payload;
     const result = await pool.query(
       `INSERT INTO issues (title, description, type, reporter_id) 
@@ -10,7 +10,7 @@ const createIssue = async (payload: IIssuePayload, reporterId: number): Promise<
       [title, description, type, reporterId]
     );
     return result.rows[0];
-},
+};
 
 
 const getAllIssues = async (queryParams: IIssueQuery) => {
@@ -64,14 +64,20 @@ const getAllIssues = async (queryParams: IIssueQuery) => {
 
 
   const finalData = issues.map((issue) => {
-    return {
-      ...issue,
-      reporter: userMap.get(issue.reporter_id),
-    };
+      const { reporter_id,created_at,updated_at, ...issueData } = issue; 
+      return {
+        ...issueData,
+        reporter: userMap.get(reporter_id),
+        created_at,
+        updated_at,
+      };
   });
 
   return finalData;
 };
+
+
+
 
 
 const getSingleIssue = async (id: string) => {
@@ -84,12 +90,12 @@ const getSingleIssue = async (id: string) => {
     const userRes = await pool.query(`SELECT id, name, role FROM users WHERE id = $1`, [issue.reporter_id]);
     const reporter = userRes.rows[0];
 
-    const { reporter_id, ...issueData } = issue;
-    return { ...issueData, reporter };
-  },
+    const { reporter_id,created_at,updated_at, ...issueData } = issue;
+    return { ...issueData, reporter, created_at, updated_at };
+};
 
 
-const updateIssue = async (id: string, payload: Partial<IIssuePayload>, user: any): Promise<IIssueResponse> {
+const updateIssue = async (id: string, payload: Partial<IIssuePayload>, user: any): Promise<IIssueResponse> => {
     const issueRes = await pool.query(`SELECT * FROM issues WHERE id = $1`, [id]);
     if (issueRes.rows.length === 0) throw new Error("Issue not found");
     const issue = issueRes.rows[0];
@@ -111,14 +117,15 @@ const updateIssue = async (id: string, payload: Partial<IIssuePayload>, user: an
       [title, description, type, status, id]
     );
     return result.rows[0];
-},
+};
 
 
-const deleteIssue = async (id: string): Promise<boolean> {
+
+const deleteIssue = async (id: string): Promise<boolean> => {
     const result = await pool.query(`DELETE FROM issues WHERE id = $1 RETURNING id`, [id]);
     if (result.rowCount === 0) throw new Error("Issue not found");
     return true;
-}
+};
 
 
 export const issuesService = {
