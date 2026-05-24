@@ -1,5 +1,5 @@
 ```markdown
-# 🚼 DevPulse — Tech Issue & Feature Tracker
+#  DevPulse — Tech Issue & Feature Tracker
 
 DevPulse is an internal collaborative web platform designed for software teams to report bugs, suggest features, and coordinate resolutions efficiently. The system is built with a highly structured modular architecture using Node.js, TypeScript, and Express.js, backed by a PostgreSQL database utilizing raw SQL queries exclusively.
 
@@ -9,7 +9,7 @@ DevPulse is an internal collaborative web platform designed for software teams t
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Layer | Technology | Specification / Note |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ DevPulse is an internal collaborative web platform designed for software teams t
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
 * **Role-Based Access Control (RBAC):** Distinct permission tiers for `contributor` and `maintainer` roles.
 * **Pure Raw SQL Execution:** High-performance database transactions executed strictly using direct SQL strings without query builders.
@@ -34,7 +34,7 @@ DevPulse is an internal collaborative web platform designed for software teams t
 
 ---
 
-## 🗄️ Database Schema Summary
+##  Database Schema Summary
 
 The database consists of two primary tables. All constraints, relations, and data checks are handled securely inside the application workflow logic.
 
@@ -119,7 +119,7 @@ npm start
 
 ---
 
-## 🌐 API Endpoint Specifications
+##  API Endpoint Specifications
 
 ### 🔹 Authentication Module (`/api/auth`)
 
@@ -158,7 +158,7 @@ npm start
 
 ---
 
-## 🚨 System Response Standards
+##  System Response Standards
 
 ### Success Structure (HTTP 200 / 201)
 
