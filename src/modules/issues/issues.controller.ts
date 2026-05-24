@@ -22,11 +22,12 @@ const createIssue = async (req: Request, res: Response) => {
       message: "Issue created successfully",
       data: issue,
     });
-  } catch (error: any) {
+  } catch (error: unknown) { 
+    const errorMessage = error instanceof Error ? error.message : "Failed to create issue";
     return sendResponse(res, 400, {
       success: false,
       message: "Failed to create issue",
-      errors: error.message,
+      errors: errorMessage,
     });
   }
 };
@@ -39,11 +40,12 @@ const getAllIssues = async (req: Request, res: Response) => {
       success: true,
       data: issues,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Failed to fetch issues";
     return sendResponse(res, 500, {
       success: false,
       message: "Failed to fetch issues",
-      errors: error.message,
+      errors: errorMessage,
     });
   }
 };
@@ -66,11 +68,12 @@ const getSingleIssue = async (req: Request, res: Response) => {
       success: true,
       data: issue,
     });
-  } catch (error: any) {
+  } catch (error: unknown) { 
+    const errorMessage = error instanceof Error ? error.message : "Issue not found";
     return sendResponse(res, 404, {
       success: false,
       message: "Issue not found",
-      errors: error.message,
+      errors: errorMessage,
     });
   }
 };
@@ -97,17 +100,19 @@ const updateIssue = async (req: Request, res: Response) => {
       message: "Issue updated successfully",
       data: issue,
     });
-  } catch (error: any) {
-    const code = error.message.includes("Forbidden")
+  } catch (error: unknown) { 
+    const errorMessage = error instanceof Error ? error.message : "";
+    
+    const code = errorMessage.includes("Forbidden")
       ? 403
-      : error.message.includes("Conflict")
+      : errorMessage.includes("Conflict")
       ? 409
       : 400;
 
     return sendResponse(res, code, {
       success: false,
       message: "Update failed",
-      errors: error.message,
+      errors: errorMessage || "An unexpected error occurred",
     });
   }
 };
@@ -129,11 +134,12 @@ const deleteIssue = async (req: Request, res: Response) => {
       success: true,
       message: "Issue deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) { 
+    const errorMessage = error instanceof Error ? error.message : "Deletion failed";
     return sendResponse(res, 404, {
       success: false,
       message: "Deletion failed",
-      errors: error.message,
+      errors: errorMessage,
     });
   }
 };
