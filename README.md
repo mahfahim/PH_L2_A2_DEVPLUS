@@ -2,7 +2,7 @@
 
 DevPulse is an internal collaboration platform for software teams to report bugs, suggest features, and manage resolutions efficiently. It is built with a modular architecture using Node.js, TypeScript, and Express.js, with PostgreSQL as the database using raw SQL queries only.
 
-* **Live URL:** [https://devpulse-api.vercel.app](https://devpulse-api.vercel.app)
+* **Live URL:** [https://devpulse-api.vercel.app](https://devplus-beta.vercel.app/)
 * **GitHub:** [https://github.com/yourusername/devpulse](https://github.com/yourusername/devpulse)
 * **Demo Video:** [https://youtube.com](https://youtube.com)
 
